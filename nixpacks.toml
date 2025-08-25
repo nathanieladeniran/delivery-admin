@@ -2,16 +2,7 @@
 builder = "nixpacks"
 
 [build.env]
-# Override composer install to skip ext-gd requirement
 COMPOSER_INSTALL_FLAGS = "--optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd"
 
 [start]
-# Start Laravel on Railway’s port
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
-
-
-[phases.setup]
-nixPkgs = ["php83", "php83Extensions.gd"]
-
-[variables]
-PHP_EXTENSIONS = "gd"

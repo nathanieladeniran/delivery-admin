@@ -1,8 +1,9 @@
 [phases.setup]
 # Tell Nixpacks which PHP + extensions we want
 nixPkgs = [
-  "php83",
+    "php83",
   "php83Extensions.gd",
+  "php83Extensions.zip",
   "php83Extensions.pdo_mysql",
   "php83Extensions.redis",
   "php83Extensions.mbstring",

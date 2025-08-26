@@ -23,5 +23,4 @@ RUN php artisan config:cache || true
 ENV PORT=8000
 EXPOSE 8000
 
-# Use shell form so $PORT expands correctly
-CMD php artisan serve --host=0.0.0.0 --port=$PORT
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]

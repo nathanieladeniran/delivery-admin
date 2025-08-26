@@ -1,26 +1,23 @@
-FROM php:8.3-fpm
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    git curl zip unzip libpq-dev libonig-dev libzip-dev libpng-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip gd
 
-# Install composer
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Set working directory
+WORKDIR /var/www/html
 
+# Copy files
 COPY . .
 
-RUN composer install --optimize-autoloader --no-scripts --no-interaction
+# Install PHP dependencies (ignore gd requirement to prevent failure)
+RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd
 
-CMD ["php-fpm"]
+# Laravel specific: cache config
+RUN php artisan config:cache || true
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

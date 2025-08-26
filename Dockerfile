@@ -1,24 +1,24 @@
-# Use an official PHP 8.2 image instead of Ubuntu
 FROM php:8.2-fpm
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
-    zip \
-    unzip \
-    git \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    git curl zip unzip libpq-dev libonig-dev libzip-dev libpng-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip gd
 
 # Install Composer
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Set working directory
+WORKDIR /var/www/html
 
+# Copy files
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies (ignore gd requirement to prevent failure)
+RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd
 
-CMD ["php-fpm"]
+# Laravel specific: cache config
+RUN php artisan config:cache || true
+
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

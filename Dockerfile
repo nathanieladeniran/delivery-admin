@@ -20,7 +20,5 @@ RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignor
 # Laravel specific: cache config
 RUN php artisan config:cache || true
 
-ENV PORT=8000
-EXPOSE 8000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

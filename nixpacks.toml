@@ -17,7 +17,7 @@ nixPkgs = [
 
 [variables]
 # Force composer to use production-ready settings
-COMPOSER_INSTALL_FLAGS = "--optimize-autoloader --no-scripts --no-interaction"
+COMPOSER_INSTALL_FLAGS="--ignore-platform-req=ext-zip --ignore-platform-req=ext-gd"
 
 [start]
 # Run Laravel on Railway’s assigned port

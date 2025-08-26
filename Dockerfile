@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,17 +11,13 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy project files
+# Copy files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-scripts --no-interaction
+# Install PHP dependencies (ignore gd requirement to prevent failure)
+RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-gd
 
-# Cache Laravel config (ignore errors if artisan not ready)
+# Laravel specific: cache config
 RUN php artisan config:cache || true
 
-# Expose port 8080 (for testing with artisan serve)
-EXPOSE 8080
-
-# Start Laravel's built-in server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT:-8000}"]

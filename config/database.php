@@ -84,17 +84,15 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'), // use the full connection string if available
-            'host' => env('DATABASE_HOST', '127.0.0.1'),
-            'port' => env('DATABASE_PORT', '5432'),
-            'database' => env('DATABASE_DATABASE', 'laravel'),
-            'username' => env('DATABASE_USERNAME', 'postgres'),
-            'password' => env('DATABASE_PASSWORD', ''),
+            'host' => env('PGHOST', '127.0.0.1'),
+            'port' => env('PGPORT', '5432'),
+            'database' => env('PGDATABASE', 'forge'),
+            'username' => env('PGUSER', 'forge'),
+            'password' => env('PGPASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'prefix_indexes' => true,
             'schema' => 'public',
-            'sslmode' => 'require',
+            'sslmode' => 'prefer',
         ],
 
         'sqlsrv' => [
